@@ -1,26 +1,22 @@
 import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import { Formik } from 'formik';
+import './styles.css';
 
 function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+	return (
+		<div>
+			<Formik initialValues={{ text: '' }} onSubmit={(data) => console.log(data)}>
+				{({ values, handleChange, handleSubmit }) => (
+					<form onSubmit={handleSubmit}>
+						<h1>How fast can you type?</h1>
+						<textarea name="text" onChange={handleChange} value={values.text} />
+						<h4>Time Remaining : </h4>
+						<button>Start</button>
+					</form>
+				)}
+			</Formik>
+		</div>
+	);
 }
 
 export default App;
