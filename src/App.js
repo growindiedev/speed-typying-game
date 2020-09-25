@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { Formik, useFormik } from 'formik';
 import './styles.css';
 
@@ -16,6 +16,8 @@ function App() {
 			console.log(values);
 		}
 	});
+
+	const inputRef = useRef(null);
 
 	useEffect(
 		() => {
@@ -41,6 +43,8 @@ function App() {
 		setTimeRemaining(START_TIME);
 		formik.values.text = '';
 		setWordCount(0);
+		inputRef.current.disabled = false; // this line of code is needed to fix the bug
+		inputRef.current.focus();
 	};
 
 	const endGame = () => {
@@ -57,6 +61,7 @@ function App() {
 					onChange={formik.handleChange}
 					value={formik.values.text}
 					disabled={!timeIsRunning}
+					ref={inputRef}
 				/>
 				<h4>{`Time remaining : ${timeRemaining}`}</h4>
 				<button onClick={startGame} disabled={timeIsRunning}>
