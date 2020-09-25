@@ -3,8 +3,19 @@ import { Formik, useFormik } from 'formik';
 import './styles.css';
 
 function App() {
-	const [ timeRemaining, setTimeRemaining ] = useState(7);
+	const START_TIME = 10;
+	const [ timeRemaining, setTimeRemaining ] = useState(START_TIME);
 	const [ timeIsRunning, setTimeIsRunning ] = useState(false);
+	const [ wordCount, setWordCount ] = useState(0);
+
+	const formik = useFormik({
+		initialValues: {
+			text: ''
+		},
+		onSubmit: (values) => {
+			console.log(values);
+		}
+	});
 
 	useEffect(
 		() => {
@@ -13,8 +24,7 @@ function App() {
 					setTimeRemaining((time) => time - 1);
 				}, 1000);
 			} else if (timeRemaining === 0) {
-				setTimeIsRunning(false);
-				setTimeRemaining(7);
+				endGame();
 			}
 		},
 		[ timeRemaining, timeIsRunning ]
@@ -22,29 +32,38 @@ function App() {
 
 	const calculateWordCount = (str) => {
 		let wordArray = str.trim().split(' ');
-		let filteredWords = wordArray.filter((word) => word !== '');
-		return filteredWords.length;
+		let filteredWords = wordArray.filter((word) => word !== '').length;
+		return filteredWords;
 	};
 
-	const startButton = () => {
+	const startGame = () => {
 		setTimeIsRunning(true);
-		//calculateWordCount(values.text);
-		//setTimeRemaining(7);
+		setTimeRemaining(START_TIME);
+		formik.values.text = '';
+		setWordCount(0);
+	};
+
+	const endGame = () => {
+		setTimeIsRunning(false);
+		setWordCount(calculateWordCount(formik.values.text));
 	};
 
 	return (
 		<div>
-			<Formik initialValues={{ text: '' }} onSubmit={(data) => console.log(data)}>
-				{({ values, handleChange, handleSubmit }) => (
-					<form onSubmit={handleSubmit}>
-						<h1>How fast can you type?</h1>
-						<textarea name="text" onChange={handleChange} value={values.text} disabled={!timeIsRunning} />
-						<h4>{`Time Remaining : ${timeRemaining}`}</h4>
-						<button onClick={startButton}>Start</button>
-						<h1>{`word count ${calculateWordCount(values.text)}`}</h1>
-					</form>
-				)}
-			</Formik>
+			<form onSubmit={formik.handleSubmit}>
+				<h1>How fast can you type?</h1>
+				<textarea
+					name="text"
+					onChange={formik.handleChange}
+					value={formik.values.text}
+					disabled={!timeIsRunning}
+				/>
+				<h4>{`Time remaining : ${timeRemaining}`}</h4>
+				<button onClick={startGame} disabled={timeIsRunning}>
+					Start
+				</button>
+				<h1>{`word count: ${wordCount}`}</h1>
+			</form>
 		</div>
 	);
 }
@@ -58,12 +77,26 @@ export default App;
 		onSubmit: (values) => {
 			console.log(values);
 		}
-	
+	})
 		<form onSubmit={formik.handleSubmit}>
 		<h1>How fast can you type?</h1>
 		<textarea name="text" onChange={formik.handleChange} value={formik.values.text} />
 		<h4>Time Remaining : </h4>
 		<button type="submit">Start</button>
+
+		
 	</form>
+	<Formik initialValues={{ text: '' }} onSubmit={(data) => console.log(data)}>
+				{({ values, handleChange, handleSubmit }) => (
+					<form onSubmit={handleSubmit}>
+						<h1>How fast can you type?</h1>
+						<textarea name="text" onChange={handleChange} value={values.text} disabled={!timeIsRunning} />
+						<h4>{`Time Remaining : ${timeRemaining}`}</h4>
+						<button onClick={startButton}>Start</button>
+						<h1>{`word count ${wordCount}`}</h1>
+					</form>
+				)}
+			</Formik>
 	
-	}); */
+	
+	*/

@@ -41,6 +41,10 @@ textarea {
 	padding: 10px;
 }
 
+textarea:disabled {
+	background-color: #a5a2a2;
+}
+
 .container {
 	width: 100%;
 }
